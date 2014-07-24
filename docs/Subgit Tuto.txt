@@ -1,0 +1,60 @@
+TUTO SUBGIT
+
+Subgit permet de faire du mirroring entre un serveur SVN et un serveur Git.
+Il permet également l'import d'un repo SVN vers un nouveau Repo Git (migration).
+
+ATTENTION : eGit pas compatible avec Subgit (voir à la fin)
+
+-- Creation du serveur SVN et lancement
+
+svnadmin create "C:\Users\MDO3324\Downloads\Dev\outils\repos"
+
+svnserve --daemon --root "C:\Users\MDO3324\Downloads\Dev\outils\repos"
+
+-- Création d'un projet avec trunk, branches et tags
+
+Microsoft Windows [version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation. Tous droits réservés.
+
+C:\Users\MDO3324>svn mkdir svn://localhost/monprojet
+Domaine d'authentificationÿ: <svn://localhost:3690> 80179f33-7b73-5943-982c-5f6eba3e7a4b
+Mot de passe pour 'MDO3324'ÿ:
+Domaine d'authentificationÿ: <svn://localhost:3690> 80179f33-7b73-5943-982c-5f6eba3e7a4b
+Nom d'utilisateurÿ: matt
+Mot de passe pour 'matt'ÿ: ******
+
+R'vision 1 propag'e.
+
+C:\Users\MDO3324>svn mkdir svn://localhost/monprojet/trunk
+
+R'vision 2 propag'e.
+
+C:\Users\MDO3324>svn mkdir svn://localhost/monprojet/branches
+
+R'vision 5 propag'e.
+
+C:\Users\MDO3324>svn mkdir svn://localhost/monprojet/tags
+
+R'vision 6 propag'e.
+
+C:\Users\MDO3324>
+
+-- Création d'un repo Git via le mirroring du repo SVN
+
+C:\Users\MDO3324\Downloads\Dev\outils\subgit-2.0.2\bin>
+subgit.bat configure --svn-url svn://localhost/monprojet C:\Users\MDO3324\Downloads\Dev\outils\gitRepo\distant\gitRepoD.git
+
+-- Configuration du repo
+-> C:\Users\MDO3324\Downloads\Dev\outils\gitRepo\distant\gitRepoD.git\subgit
+	- passwd : rajouter une ligne avec login mdp SVN (ex : matt passwd)
+	- authors : rajouter une ligne avec login SVN = login Git (ex : matt = MDO <MDO3324@free.fr>)
+	- config : dans [auth "default"], maj du login mdp SVN (ex : passwords = matt/passwd)
+	
+-- Installation du repo
+C:\Users\MDO3324\Downloads\Dev\outils\subgit-2.0.2\bin>subgit.bat install "C:\Users\MDO3324\Downloads\Dev\outils\gitRepo\distant\gitRepoD.git"
+-> créer au passage un processus qui lancera toutes les 60 secondes par défaut un update SVN vers Git
+
+-- Pour arrêter ce processus : C:\Users\MDO3324\Downloads\Dev\outils\subgit-2.0.2\bin>subgit.bat uninstall "C:\Users\MDO3324\Downloads\Dev\outils\gitRepo\distant\gitRepoD.git"
+
+-> Problème eGit n'est pas compatible avec les scripts Hook qui permette le commit SVN au moment du Push contrairement à git en ligne de commande.
+Pas de résolution visible pour l'instant.
